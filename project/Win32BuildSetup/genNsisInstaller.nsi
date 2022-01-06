@@ -243,7 +243,7 @@ SectionEnd
 !include /nonfatal "pvr-addons.nsi"
 !include /nonfatal "screensaver-addons.nsi"
 !include /nonfatal "vfs-addons.nsi"
-!include /nonfatal "visualization-addons.nsi"
+!include /nonfatal "visualization-addons-hack.nsi"
 
 ;--------------------------------
 ;Descriptions
