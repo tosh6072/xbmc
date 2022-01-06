@@ -481,6 +481,9 @@ public:
   bool HasMusicVideoInfo(const std::string& strFilenameAndPath);
 
   void GetFilePathById(int idMovie, std::string &filePath, VIDEODB_CONTENT_TYPE iType);
+  // kevin
+  int GetIdByFilePath(std::string& filePath);
+  // kevin done
   std::string GetGenreById(int id);
   std::string GetCountryById(int id);
   std::string GetSetById(int id);

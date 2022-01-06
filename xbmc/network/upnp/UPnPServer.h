@@ -103,6 +103,9 @@ public:
     NPT_Result AddSubtitleUriForSecResponse(const NPT_String& movie_md5,
                                             const NPT_String& subtitle_uri);
 
+    // kevin
+    void MySeek(NPT_InputStream& from, NPT_Position offset);
+    // kevin done
 
   private:
     void OnScanCompleted(int type);

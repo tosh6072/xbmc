@@ -3132,6 +3132,15 @@ void CVideoDatabase::GetFilePathById(int idMovie, std::string &filePath, VIDEODB
   }
 }
 
+//kevin
+// fix for list returned for dlna incorrect
+//********************************************************************************************************************************
+int CVideoDatabase::GetIdByFilePath(std::string& filePath)
+{
+  return GetMovieId(filePath);
+}
+//kevin end
+
 //********************************************************************************************************************************
 void CVideoDatabase::GetBookMarksForFile(const std::string& strFilenameAndPath, VECBOOKMARKS& bookmarks, CBookmark::EType type /*= CBookmark::STANDARD*/, bool bAppend, long partNumber)
 {

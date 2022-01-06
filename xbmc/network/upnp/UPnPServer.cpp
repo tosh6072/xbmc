@@ -746,6 +746,25 @@ CUPnPServer::BuildResponse(PLT_ActionReference&          action,
     m_logger->debug("Building UPnP response with filter '{}', starting @ {} with {} requested",
                     filter, starting_index, requested_count);
 
+	// kevin testing
+    //	note this section of codes only purpose is to log the request body, it does not change kodi functionality
+    NPT_String body;
+
+    NPT_HttpEntity* entity = context.GetRequest().GetEntity();
+    NPT_InputStreamReference stream;
+    entity->GetInputStream(stream);
+    NPT_StringOutputStream* output_stream = new NPT_StringOutputStream(&body);
+    //MySeek(*stream, 0);
+    NPT_Result res;
+    stream->Seek(0);
+    res = NPT_StreamToStreamCopy(*stream, *output_stream, 0, entity->GetContentLength());
+
+    m_logger->debug("UPnpServer request body '{}', from {} on port {}", output_stream->GetString(),
+                    context.GetRequest().GetUrl().GetPath(),
+                    context.GetRequest().GetUrl().GetPort());
+    delete output_stream;
+    // kevin testing done
+
     // we will reuse this ThumbLoader for all items
     NPT_Reference<CThumbLoader> thumb_loader;
 
@@ -811,6 +830,13 @@ CUPnPServer::BuildResponse(PLT_ActionReference&          action,
     NPT_CHECK(action->SetArgumentValue("UpdateId", "0"));
     return NPT_SUCCESS;
 }
+
+// kevin (not currently used)
+void CUPnPServer::MySeek(NPT_InputStream& from, NPT_Position offset /* = 0 */)
+{
+  from.Seek(offset);
+}
+// kevin done
 
 /*----------------------------------------------------------------------
 |   FindSubCriteria
@@ -1172,6 +1198,21 @@ CUPnPServer::ServeFile(const NPT_HttpRequest&              request,
         return NPT_SUCCESS;
       }
     }
+
+    //kevin
+    //	fix for issue with video playlists returned as files, should be folders
+    CVideoDatabase db;
+    if (!db.Open())
+      return NULL;
+
+    std::string test = (std::string)file_path;
+    int MovieId = db.GetIdByFilePath((std::string)file_path);
+    CVariant data;
+    data["filepath"] = (const char*)file_path;
+    data["movieid"] = MovieId;
+    CServiceBroker::GetAnnouncementManager()->Announce(ANNOUNCEMENT::VideoLibrary, "uPnPServeFile",
+                                                       data);
+    //kevin end
 
     // File requested
     NPT_HttpUrl rooturi(context.GetLocalAddress().GetIpAddress().ToString(), context.GetLocalAddress().GetPort(), "/");
